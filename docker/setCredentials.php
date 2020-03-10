@@ -1,23 +1,23 @@
 <?php
 
-$env = file_get_contents(__DIR__. '/../.env');
+$env = \file_get_contents(__DIR__. '/../.env');
 
 $getValue = function (string $key) use ($env): ?string {
-    preg_match("/{$key}\ *?=\ *?(?'value'\w+)/", $env, $matches);
+    \preg_match("/{$key}\ *?=\ *?(?'value'\w+)/", $env, $matches);
 
     return $matches['value'];
 };
 
-$name = $getValue('USER_NAME');
-$password = $getValue('USER_PASSWORD');
+$name = $getValue('USER_NAME') ?? 'admin';
+$password = $getValue('USER_PASSWORD') ?? 'admin';
 
 $authFileName = 'auth';
 
-file_put_contents(__DIR__ . '/app/' . $authFileName, $name . ':' . crypt($password, base64_encode($password)));
+\file_put_contents(__DIR__ . '/app/' . $authFileName, $name . ':' . \crypt($password, \base64_encode($password)));
 
 $utorrentFileName = 'utserver.conf';
 
-file_put_contents(__DIR__ . '/utorrent/' . $utorrentFileName, getConfig($name, $password));
+\file_put_contents(__DIR__ . '/utorrent/' . $utorrentFileName, getConfig($name, $password));
 
 function getConfig($name, $password)
 {
@@ -38,4 +38,4 @@ seed_ratio: 0
 ut_webui_dir: /utorrent";
 }
 
-sleep(2);
+\sleep(2);
