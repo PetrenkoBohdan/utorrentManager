@@ -2,11 +2,11 @@
 
 - Install project:
 ```sh
-git-clone https://github.com/BohdanPetrenko/utorrentManager.git  
+git clone https://github.com/BohdanPetrenko/utorrentManager.git  
 ```
+- Run <code>composer install</code>
 - Add env to project <code>cp .env.example .env</code>
 - Set the application key <code>php artisan key:generate</code>
-- Run <code>composer install</code>
 - Build container <code>make build</code>
 - Run container <code>make up</code>
 
