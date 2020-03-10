@@ -1,0 +1,45 @@
+version: '3'
+services:
+  app:
+    container_name: td-auto-app
+    build:
+      context: ./docker/app
+      dockerfile: Dockerfile
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    ports:
+      - '80:80'
+    volumes:
+      - ./:/app:rw
+    environment:
+      WEB_DOCUMENT_ROOT: /app/public
+    depends_on:
+      - utorrent
+  utorrent:
+    build:
+      context: ./docker/utorrent
+      dockerfile: Dockerfile
+    container_name: td-auto-utorrent
+    volumes:
+      - "./storage/app/public/files:/utorrent/data"
+      - "./docker/utorrent/utserver.conf:/utorrent/utserver.conf"
+        #      - "./storage/data/utorrent/settings:/utorrent/settings"
+#    environment:
+#      HOST_UID: 1002
+#      HOST_GID: 1002
+#      NGWEBUI: 1
+    ports:
+      - '8080:8080'
+      - '6881:6881'
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+volumes:
+  utorrent-settings:
+    driver: local
