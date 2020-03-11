@@ -1,6 +1,6 @@
 <?php
 
-$env = \file_get_contents(__DIR__. '/../.env');
+$env = \file_get_contents(__DIR__ . '/../.env');
 
 $getValue = function (string $key) use ($env): ?string {
     \preg_match("/{$key}\ *?=\ *?(?'value'\w+)/", $env, $matches);
@@ -11,13 +11,16 @@ $getValue = function (string $key) use ($env): ?string {
 $name = $getValue('USER_NAME') ?? 'admin';
 $password = $getValue('USER_PASSWORD') ?? 'admin';
 
-$authFileName = 'auth';
+$authFileName = __DIR__ . '/app/' . 'auth';
+\file_put_contents($authFileName, $name . ':' . \crypt($password, \base64_encode($password)));
 
-\file_put_contents(__DIR__ . '/app/' . $authFileName, $name . ':' . \crypt($password, \base64_encode($password)));
+$utorrentFileName = __DIR__ . '/utorrent/' . 'utserver.conf';
+\file_put_contents($utorrentFileName, getConfig($name, $password));
 
-$utorrentFileName = 'utserver.conf';
-
-\file_put_contents(__DIR__ . '/utorrent/' . $utorrentFileName, getConfig($name, $password));
+while (! \file_exists($utorrentFileName) || !\file_exists($authFileName)) {
+    echo 'Waiting for creating config files' . PHP_EOL;
+    \sleep(2);
+}
 
 function getConfig($name, $password)
 {
@@ -37,5 +40,3 @@ append_incomplete: 1
 seed_ratio: 0
 ut_webui_dir: /utorrent";
 }
-
-\sleep(2);
