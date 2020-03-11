@@ -15,8 +15,8 @@ connect: ## This will run `docker-compose exec app bash`
 	docker-compose exec app bash
 
 build: ## This will run `docker-compose build app` and set credentials from .env
-	php docker/setCredentials.php
-	docker-compose build app
+	#php docker/setCredentials.php
+	docker-compose build
 
 exec: ## This command will exec any args inside application container
 	docker-compose exec app cd /app && $(ARGS)
